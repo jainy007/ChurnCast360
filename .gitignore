@@ -1,3 +1,73 @@
-.venv*
-data/processed/node_modules/
+# === Python ===
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+*.log
+*.pickle
+*.pkl
+
+# Virtual environments
+.env
+.venv
+.venv310
+
+# VSCode settings
+.vscode/
+
+# Pytest cache
+.pytest_cache/
+.cache/
+
+# Jupyter Notebook Checkpoints (if any)
+.ipynb_checkpoints/
+
+# === Models and Data ===
+models/
+downloads/
+data/processed/
+data/interim/
+data/external/
+
+# === Azure Azurite Local Storage ===
+azurite/
+.azurite/
+azurite/debug.log
+**/.azurite/*
+**/azurite/*
+**/debug.log
+
+# === Docker files (Optional: for build context hygiene) ===
+*.dockerfile
+docker-compose.override.yml
+
+# === MLflow ===
+mlruns/
+mlflow-artifacts/
+
+# === OS Files ===
+.DS_Store
+Thumbs.db
+
+# === Logs and Debug ===
+*.log
+logs/
+debug.log
+
+# === Node/NPM (if frontend later) ===
+node_modules/
+npm-debug.log
 package-lock.json
+yarn-error.log
+
+# === Test Coverage ===
+htmlcov/
+.coverage
+.tox/
+coverage.xml
+*.cover
+*.py,cover
+.cache
+nosetests.xml
