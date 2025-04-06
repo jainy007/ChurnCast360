@@ -1,0 +1,30 @@
+{
+  "rows": 2000,
+  "columns": 9,
+  "missing_values": {
+    "customer_id": 0,
+    "signup_date": 0,
+    "last_active": 0,
+    "country": 0,
+    "subscription_tier": 0,
+    "monthly_spend": 0,
+    "support_tickets": 0,
+    "churn": 0,
+    "source": 0
+  },
+  "target_distribution": {
+    "0": 0.7935,
+    "1": 0.2065
+  },
+  "dtypes": {
+    "customer_id": "object",
+    "signup_date": "object",
+    "last_active": "object",
+    "country": "object",
+    "subscription_tier": "object",
+    "monthly_spend": "float64",
+    "support_tickets": "int64",
+    "churn": "int64",
+    "source": "object"
+  }
+}
