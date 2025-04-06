@@ -13,8 +13,8 @@
     "source": 0
   },
   "target_distribution": {
-    "0": 0.7935,
-    "1": 0.2065
+    "0": 0.791,
+    "1": 0.209
   },
   "dtypes": {
     "customer_id": "object",

@@ -1,0 +1,23 @@
+{
+  "name": "churncast360",
+  "version": "1.0.0",
+  "description": "ChurnCast360 is an open-source toolkit to predict churn, forecast sales, and drive data-backed decisions. Covers cleaning, EDA, hypothesis testing, modeling, and visuals. Built during Google Analytics cert, extended with CUDA, TensorFlow, and MLOps specializations.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jainy007/ChurnCast360.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jainy007/ChurnCast360/issues"
+  },
+  "homepage": "https://github.com/jainy007/ChurnCast360#readme",
+  "devDependencies": {
+    "azurite": "^3.12.0"
+  }
+}
