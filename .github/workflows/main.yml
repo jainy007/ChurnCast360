@@ -2,37 +2,45 @@ name: ChurnCast360 CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  test:
+  test_pipeline:
+    if: contains(github.event.head_commit.message, '[pipeline]') || contains(github.event.head_commit.message, '[all]')
     runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Check Conda environment exists
-        run: |
-          source ~/miniconda3/etc/profile.d/conda.sh
-          conda env list | grep churncast360
-
-      - name: Verify Python and CUDA
+      - name: Setup Conda
         run: |
           source ~/miniconda3/etc/profile.d/conda.sh
           conda activate churncast360
-          python --version
-          python -c "import xgboost as xgb; print(xgb.__version__)"
-          nvidia-smi
 
-      - name: Run training pipeline
+      - name: Train models before testing
         run: |
-          source ~/miniconda3/etc/profile.d/conda.sh
-          conda activate churncast360
           python src/model/train_tuned_models.py --device auto
 
       - name: Run tests
+        run: pytest tests/
+
+  code_quality:
+    if: contains(github.event.head_commit.message, '[lint]') || contains(github.event.head_commit.message, '[all]')
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Conda
         run: |
           source ~/miniconda3/etc/profile.d/conda.sh
           conda activate churncast360
-          pytest tests/
+
+      - name: Install linters (optional if already in env)
+        run: |
+          conda install black ruff pre-commit -y
+
+      - name: Run pre-commit
+        run: pre-commit run --all-files --show-diff-on-failure

@@ -60,8 +60,8 @@ ChurnCast360 is an enterprise-grade customer churn prediction toolkit, simulatin
 ### Day 7: Test Automation + CI/CD Kickoff
 - Pytest unit tests for model pipeline
 - GitHub Actions: auto-test on push (local runner for now)
-- Optional: Black formatting, linting (if time permits)
-- In Progress (finalizing CI/CD)
+- Black formatting, linting, pre-commit hook
+- Completed
 
 ### Day 8: MLflow Tracking
 - MLflow experiments, params, metrics

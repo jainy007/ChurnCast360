@@ -21,6 +21,9 @@ __pycache__/
 .pytest_cache/
 .cache/
 
+#lint
+.ruff_cache/
+
 # Jupyter Notebook Checkpoints (if any)
 .ipynb_checkpoints/
 

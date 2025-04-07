@@ -7,6 +7,7 @@ PROCESSED_DIR = Path("data/processed")
 PLOTS_DIR = Path("reports/eda/plots")
 SUMMARY_DIR = Path("reports/eda/summaries")
 
+
 def summarize_dataset(df: pd.DataFrame, name: str):
     summary = {
         "rows": len(df),
@@ -18,8 +19,10 @@ def summarize_dataset(df: pd.DataFrame, name: str):
 
     with open(SUMMARY_DIR / f"{name}_summary.json", "w") as f:
         import json
+
         json.dump(summary, f, indent=2)
     print(f"📄 Saved summary for {name}")
+
 
 def plot_churn_distribution(df: pd.DataFrame, name: str):
     plt.figure(figsize=(5, 4))
@@ -27,6 +30,7 @@ def plot_churn_distribution(df: pd.DataFrame, name: str):
     plt.title(f"Churn Distribution - {name}")
     plt.savefig(PLOTS_DIR / f"{name}_churn_dist.png")
     plt.close()
+
 
 def plot_top_numeric_correlations(df: pd.DataFrame, name: str):
     numeric_cols = df.select_dtypes(include="number").columns.tolist()
@@ -40,6 +44,7 @@ def plot_top_numeric_correlations(df: pd.DataFrame, name: str):
     plt.savefig(PLOTS_DIR / f"{name}_top_corrs.png")
     plt.close()
 
+
 def run():
     for file in PROCESSED_DIR.glob("*_cleaned.csv"):
         name = file.stem.replace("_cleaned", "")
@@ -48,6 +53,7 @@ def run():
         summarize_dataset(df, name)
         plot_churn_distribution(df, name)
         plot_top_numeric_correlations(df, name)
+
 
 if __name__ == "__main__":
     run()

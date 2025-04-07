@@ -9,6 +9,15 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+### Code Quality
+
+We use **Black** and **Ruff** for formatting and linting.
+
+- Auto-fix issues locally:
+  ```bash
+  pre-commit run --all-files
+  ```
+
 ### Install Azurite (Azure Blob Simulator)
 
 ```bash

@@ -28,10 +28,11 @@ def init_blob_service():
     return service_client
 
 
-
 def upload_blob(local_file_path, blob_name):
     service_client = init_blob_service()
-    blob_client = service_client.get_blob_client(container=CONTAINER_NAME, blob=blob_name)
+    blob_client = service_client.get_blob_client(
+        container=CONTAINER_NAME, blob=blob_name
+    )
 
     with open(local_file_path, "rb") as data:
         blob_client.upload_blob(data, overwrite=True)
@@ -40,7 +41,9 @@ def upload_blob(local_file_path, blob_name):
 
 def download_blob(blob_name, download_file_path):
     service_client = init_blob_service()
-    blob_client = service_client.get_blob_client(container=CONTAINER_NAME, blob=blob_name)
+    blob_client = service_client.get_blob_client(
+        container=CONTAINER_NAME, blob=blob_name
+    )
 
     # Ensure directory exists
     os.makedirs(os.path.dirname(download_file_path), exist_ok=True)
@@ -48,6 +51,7 @@ def download_blob(blob_name, download_file_path):
     with open(download_file_path, "wb") as download_file:
         download_file.write(blob_client.download_blob().readall())
         print(f"Downloaded blob '{blob_name}' to '{download_file_path}'")
+
 
 def list_blobs():
     service_client = init_blob_service()
@@ -61,7 +65,10 @@ if __name__ == "__main__":
     # Test uploads
     test_files = [
         ("data/raw/IBM-Telco-Customer-Churn.csv", "raw/IBM-Telco-Customer-Churn.csv"),
-        ("data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv", "raw/Kaggle-Telco-Customer-Churn.csv"),
+        (
+            "data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv",
+            "raw/Kaggle-Telco-Customer-Churn.csv",
+        ),
         ("data/raw/bank_churn.csv", "raw/Bank-Churn.csv"),
     ]
 
@@ -72,5 +79,7 @@ if __name__ == "__main__":
             print(f"File not found: {local_path}")
 
     # Test download (optional)
-    download_blob("raw/IBM-Telco-Customer-Churn.csv", "downloads/IBM-Telco-Customer-Churn.csv")
+    download_blob(
+        "raw/IBM-Telco-Customer-Churn.csv", "downloads/IBM-Telco-Customer-Churn.csv"
+    )
     list_blobs()

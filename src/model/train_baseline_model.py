@@ -21,34 +21,40 @@ Note:
 This script is part of the ChurnCast360 pipeline simulating an enterprise-level churn prediction workflow, preparing for further enhancements like MLflow tracking, automated CI/CD, and containerized deployments.
 """
 
-
 import pandas as pd
 import sqlite3
 import os
 import pickle
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, recall_score, roc_auc_score, classification_report
+from sklearn.metrics import (
+    accuracy_score,
+    recall_score,
+    roc_auc_score,
+    classification_report,
+)
 from sklearn.preprocessing import LabelEncoder
 from sklearn.impute import SimpleImputer
 
 # --- Step 0: Paths and Helpers --- #
-DB_PATH = os.path.join(os.getcwd(), 'churncast360.db')
-MODEL_DIR = os.path.join(os.getcwd(), 'models')
+DB_PATH = os.path.join(os.getcwd(), "churncast360.db")
+MODEL_DIR = os.path.join(os.getcwd(), "models")
 os.makedirs(MODEL_DIR, exist_ok=True)
 
-MODEL_PATH = os.path.join(MODEL_DIR, 'logistic_regression_model.pkl')
-ENCODER_PATH = os.path.join(MODEL_DIR, 'label_encoders.pkl')
-IMPUTER_PATH = os.path.join(MODEL_DIR, 'imputer.pkl')
+MODEL_PATH = os.path.join(MODEL_DIR, "logistic_regression_model.pkl")
+ENCODER_PATH = os.path.join(MODEL_DIR, "label_encoders.pkl")
+IMPUTER_PATH = os.path.join(MODEL_DIR, "imputer.pkl")
+
 
 def encode_categoricals(df: pd.DataFrame):
     label_encoders = {}
     for column in df.columns:
-        if df[column].dtype == 'object':
+        if df[column].dtype == "object":
             le = LabelEncoder()
             df[column] = le.fit_transform(df[column].astype(str))
             label_encoders[column] = le
     return df, label_encoders
+
 
 # --- Step 1: Load Data from SQLite --- #
 conn = sqlite3.connect(DB_PATH)
@@ -61,7 +67,7 @@ conn.close()
 print(f"Data loaded: {df.shape[0]} rows, {df.shape[1]} columns")
 
 # --- Step 2: Prepare Data --- #
-target_col = 'churn'
+target_col = "churn"
 
 if target_col not in df.columns:
     raise ValueError(f"Target column '{target_col}' not found in dataset!")
@@ -70,7 +76,7 @@ if target_col not in df.columns:
 df, label_encoders = encode_categoricals(df)
 
 # Optional: Save label encoders for future use
-with open(ENCODER_PATH, 'wb') as f:
+with open(ENCODER_PATH, "wb") as f:
     pickle.dump(label_encoders, f)
 
 print(f"Label encoders saved to {ENCODER_PATH}")
@@ -88,14 +94,16 @@ X_imputed = pd.DataFrame(imputer.fit_transform(X), columns=X.columns)
 print("Missing values handled with median imputation")
 
 
-with open(IMPUTER_PATH, 'wb') as f:
+with open(IMPUTER_PATH, "wb") as f:
     pickle.dump(imputer, f)
 print(f"Imputer saved to {IMPUTER_PATH}")
 
 print("Features and target prepared")
 
 # Train-test split
-X_train, X_test, y_train, y_test = train_test_split(X_imputed, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X_imputed, y, test_size=0.2, random_state=42
+)
 
 
 # --- Step 3: Train Model --- #
@@ -119,7 +127,7 @@ print(f"AUC-ROC: {auc:.4f}")
 print("\nClassification Report:\n", classification_report(y_test, y_pred))
 
 # --- Step 5: Save Model --- #
-with open(MODEL_PATH, 'wb') as f:
+with open(MODEL_PATH, "wb") as f:
     pickle.dump(model, f)
 
 print(f"Model saved to {MODEL_PATH}")
