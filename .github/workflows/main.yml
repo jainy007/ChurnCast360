@@ -12,20 +12,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
+      - name: Check Conda environment exists
         run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest
+          source ~/miniconda3/etc/profile.d/conda.sh
+          conda env list | grep churncast360
 
-      - name: Run Pytest
+      - name: Verify Python and CUDA
         run: |
-          source venv/bin/activate
+          source ~/miniconda3/etc/profile.d/conda.sh
+          conda activate churncast360
+          python --version
+          python -c "import xgboost as xgb; print(xgb.__version__)"
+          nvidia-smi
+
+      - name: Run tests
+        run: |
+          source ~/miniconda3/etc/profile.d/conda.sh
+          conda activate churncast360
           pytest tests/
