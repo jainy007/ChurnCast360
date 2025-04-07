@@ -25,6 +25,12 @@ jobs:
           python -c "import xgboost as xgb; print(xgb.__version__)"
           nvidia-smi
 
+      - name: Run training pipeline
+        run: |
+          source ~/miniconda3/etc/profile.d/conda.sh
+          conda activate churncast360
+          python src/model/train_tuned_models.py --device auto
+
       - name: Run tests
         run: |
           source ~/miniconda3/etc/profile.d/conda.sh
