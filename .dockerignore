@@ -5,10 +5,10 @@ __pycache__/
 *.pyd
 
 # Ignore local data
-data/
-models/
-downloads/
-mlruns/
+# data/
+# models/
+# downloads/
+# mlruns/
 
 # Ignore Azurite
 azurite/

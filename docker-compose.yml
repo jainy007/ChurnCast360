@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: docker/fastapi/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      # Reuse models from local workspace
+      - ./models:/app/models
+      # Reuse data from local workspace
+      - ./data:/app/data
+    depends_on:
+      - mlflow
+
+  mlflow:
+    build:
+      context: .
+      dockerfile: docker/mlflow/Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      # MLflow writes artifacts here, persistent
+      - ./mlflow/artifacts:/mlflow/artifacts
+      # MLflow uses SQLite DB here (file, not folder!)
+      - ./mlflow/mlflow.db:/mlflow/mlflow.db

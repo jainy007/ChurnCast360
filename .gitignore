@@ -21,18 +21,21 @@ __pycache__/
 .pytest_cache/
 .cache/
 
-#lint
+# Lint
 .ruff_cache/
 
 # Jupyter Notebook Checkpoints (if any)
 .ipynb_checkpoints/
 
 # === Models and Data ===
-models/
+
+#Very Important:
+# We *keep* models/ because it contains important .pkl (64MB only), remove from ignore!
+# We *ignore* data/ fully (since it's 1.4 GB), no partial paths.
+
+# models/                <--- REMOVE THIS LINE (✅ keep models in git)
 downloads/
-data/processed/
-data/interim/
-data/external/
+data/
 
 # === Azure Azurite Local Storage ===
 azurite/
@@ -47,8 +50,12 @@ azurite/debug.log
 docker-compose.override.yml
 
 # === MLflow ===
+mlflow/mlflow.db
+mlflow/artifacts/
+
+# mlruns/ — optional:
+# If you want to ignore local mlruns
 mlruns/
-mlflow-artifacts/
 
 # === OS Files ===
 .DS_Store

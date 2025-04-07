@@ -66,7 +66,7 @@ ChurnCast360 is an enterprise-grade customer churn prediction toolkit, simulatin
 ### Day 8: MLflow Tracking
 - MLflow experiments, params, metrics
 - Run comparisons in MLflow UI (`http://127.0.0.1:5000/`)
-- (Schedule adjusted: moved after CI)
+- Completed
 
 ### Day 9: Kubernetes Orchestration (Minikube)
 - Install & configure Minikube

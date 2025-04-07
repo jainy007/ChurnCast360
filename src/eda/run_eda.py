@@ -21,7 +21,7 @@ def summarize_dataset(df: pd.DataFrame, name: str):
         import json
 
         json.dump(summary, f, indent=2)
-    print(f"📄 Saved summary for {name}")
+    print(f"Saved summary for {name}")
 
 
 def plot_churn_distribution(df: pd.DataFrame, name: str):
