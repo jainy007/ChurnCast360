@@ -11,6 +11,7 @@ from sklearn.metrics import accuracy_score, recall_score, roc_auc_score, classif
 from sklearn.preprocessing import LabelEncoder
 from sklearn.impute import SimpleImputer
 import xgboost as xgb
+import mlflow
 
 """
 Script to train multiple baseline models (Logistic Regression, Random Forest, XGBoost)
@@ -82,29 +83,45 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 metrics_summary = {}
 
 def evaluate_model(name, model, X_test, y_test, y_pred, y_proba):
-    accuracy = accuracy_score(y_test, y_pred)
-    recall = recall_score(y_test, y_pred)
-    auc = roc_auc_score(y_test, y_proba)
-    report = classification_report(y_test, y_pred, output_dict=True)
+    with mlflow.start_run(run_name=name):
+        accuracy = accuracy_score(y_test, y_pred)
+        recall = recall_score(y_test, y_pred)
+        auc = roc_auc_score(y_test, y_proba)
+        report = classification_report(y_test, y_pred, output_dict=True)
 
-    print(f"\nModel: {name}")
-    print(f"Accuracy: {accuracy:.4f}")
-    print(f"Recall: {recall:.4f}")
-    print(f"AUC-ROC: {auc:.4f}")
-    print("Classification Report:")
-    print(classification_report(y_test, y_pred))
+        print(f"\nModel: {name}")
+        print(f"Accuracy: {accuracy:.4f}")
+        print(f"Recall: {recall:.4f}")
+        print(f"AUC-ROC: {auc:.4f}")
+        print("Classification Report:")
+        print(classification_report(y_test, y_pred))
 
-    model_path = os.path.join('models', f'{name.lower()}_model.pkl')
-    with open(model_path, 'wb') as f:
-        pickle.dump(model, f)
-    print(f"Model saved to {model_path}")
+        model_path = os.path.join('models', f'{name.lower()}_model.pkl')
+        with open(model_path, 'wb') as f:
+            pickle.dump(model, f)
+        print(f"Model saved to {model_path}")
 
-    metrics_summary[name] = {
-        'accuracy': accuracy,
-        'recall': recall,
-        'auc': auc,
-        'classification_report': report
-    }
+        # MLflow logging
+        mlflow.log_param("model_name", name)
+        if name.lower() == "randomforest":
+            mlflow.log_param("n_estimators", model.n_estimators)
+        elif name.lower() == "logisticregression":
+            mlflow.log_param("max_iter", model.max_iter)
+        elif name.lower() == "xgboost":
+            mlflow.log_param("num_boost_round", 100)
+
+        mlflow.log_metric("accuracy", accuracy)
+        mlflow.log_metric("recall", recall)
+        mlflow.log_metric("auc", auc)
+
+        mlflow.log_artifact(model_path)
+
+        metrics_summary[name] = {
+            'accuracy': accuracy,
+            'recall': recall,
+            'auc': auc,
+            'classification_report': report
+        }
 
 # Logistic Regression
 log_model = LogisticRegression(max_iter=1000, random_state=42)
