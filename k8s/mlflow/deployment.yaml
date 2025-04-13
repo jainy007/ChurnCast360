@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: churncast-mlflow
+  labels:
+    app: churncast-mlflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: churncast-mlflow
+  template:
+    metadata:
+      labels:
+        app: churncast-mlflow
+    spec:
+      containers:
+      - name: mlflow
+        image: churncast360-mlflow:latest
+        ports:
+        - containerPort: 5000
+        imagePullPolicy: IfNotPresent

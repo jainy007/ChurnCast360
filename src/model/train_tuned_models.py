@@ -19,7 +19,9 @@ from sklearn.impute import SimpleImputer
 import xgboost as xgb
 import mlflow
 
-mlflow.set_tracking_uri("http://mlflow:5000")
+mlflow_uri = os.getenv("MLFLOW_TRACKING_URI", "http://mlflow:5000")
+print(f"[DEBUG] Using MLFLOW_TRACKING_URI: {mlflow_uri}")
+mlflow.set_tracking_uri(mlflow_uri)
 
 # Constants
 EXCLUDE_COLUMNS = ["customer_id", "customerid"]

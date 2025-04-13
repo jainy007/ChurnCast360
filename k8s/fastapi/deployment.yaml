@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: churncast-fastapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: churncast-fastapi
+  template:
+    metadata:
+      labels:
+        app: churncast-fastapi
+    spec:
+      containers:
+        - name: churncast-fastapi
+          image: churncast360-fastapi:latest
+          imagePullPolicy: IfNotPresent       
+          ports:
+            - containerPort: 8000
+          env:
+            - name: MLFLOW_TRACKING_URI
+              value: "http://churncast-mlflow-service:5000"

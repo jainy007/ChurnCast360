@@ -122,12 +122,64 @@ python src/test_app_endpoints.py
 - Prompt if you want to trigger /train endpoint
 - If /train is triggered, MLflow will record the experiment
 
+## Minikube Kubernetes Orchestration (Minikube Flow)
+
+## Step 1: Start Minikube
+
+```
+minikube start
+eval $(minikube docker-env)
+```
+
+### Step 2: Build images inside Minikube Docker daemon
+
+```
+docker build -t churncast360-mlflow -f docker/mlflow/Dockerfile .
+docker build -t churncast360-fastapi -f docker/fastapi/Dockerfile .
+```
+
+### Step 3: Deploy MLflow and FastAPI services
+```
+kubectl apply -f k8s/mlflow/deployment.yaml
+kubectl apply -f k8s/mlflow/service.yaml
+kubectl apply -f k8s/fastapi/deployment.yaml
+kubectl apply -f k8s/fastapi/service.yaml
+```
+
+### Step 4: Verify pods and services
+
+```
+kubectl get pods
+kubectl get svc
+```
+
+### Step 5: Test Minikube endpoints
+Get the Minikube service URLs:
+
+```
+minikube service churncast-fastapi-service --url
+minikube service churncast-mlflow-service --url
+```
+
+Run test runner with Minikube mode:
+
+```
+python src/test_app_endpoints.py --minikube
+```
+
+What it does:
+
+- Checks /health endpoint
+- Checks /predict endpoint
+- Optional /train endpoint, with MLflow logging to Minikube MLflow service
+```
+
 
 ## Notes
 
 - /data endpoint is not yet implemented.
-- MLflow will show run only if the /train endpoint is successful.
-- Models folder is kept in Git for reproducibility.
-- Data folder is ignored to avoid size bloat and LFS issues.
-- .dockerignore has been cleaned for context size efficiency.
-- .gitignore has been updated to ignore heavy data directories properly.
+- MLflow will show runs only if the /train endpoint is successful.
+- models/ folder is kept in Git for reproducibility.
+- data/ folder is ignored to avoid size bloat and LFS issues.
+- .dockerignore is cleaned for Docker build context efficiency.
+- .gitignore properly ignores heavy data directories.

@@ -72,6 +72,7 @@ ChurnCast360 is an enterprise-grade customer churn prediction toolkit, simulatin
 - Install & configure Minikube
 - Containerize MLflow & model serving (FastAPI)
 - Test Minikube local orchestration
+- Completed
 
 ### Day 10: CI/CD with GitHub Actions
 - Setup self-hosted runner (your PC)

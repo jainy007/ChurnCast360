@@ -64,7 +64,10 @@ def predict(data: InputData):
     input_array = imputer.transform(input_array)
 
     # Predict
-    dmatrix = xgb.DMatrix(input_array)
+    import pandas as pd
+
+    input_df = pd.DataFrame(input_array, columns=feature_names)
+    dmatrix = xgb.DMatrix(input_df, enable_categorical=False)
     proba = model.predict(dmatrix)
     prediction = int(proba[0] >= 0.5)
 

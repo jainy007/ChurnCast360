@@ -3,10 +3,12 @@ import pickle
 import json
 from pathlib import Path
 import subprocess
+import argparse
 
 MODEL_DIR = Path("models")
 DATA_PATH = Path("data/processed/master_dataset.csv")
 
+# Set default URL, override via argument
 FASTAPI_URL = "http://127.0.0.1:8000"
 
 
@@ -45,9 +47,6 @@ def generate_sample_payload():
         if col in df_sample.columns:
             df_sample[col] = le.transform(df_sample[col].astype(str))
 
-    # One-hot encode
-    df_sample = pd.get_dummies(df_sample)
-
     # Align columns
     for col in feature_names:
         if col not in df_sample.columns:
@@ -62,34 +61,56 @@ def generate_sample_payload():
     sample = df_imputed.iloc[0].tolist()
     payload = {"features": sample}
 
-    return json.dumps(payload)
+    return payload
 
 
 def test_predict():
+    import requests
+
     payload = generate_sample_payload()
-    command = [
-        "curl",
-        "-X",
-        "POST",
-        f"{FASTAPI_URL}/predict",
-        "-H",
-        "Content-Type: application/json",
-        "-d",
-        payload,
-    ]
-    run_curl(command)
+
+    print("Step 2: Test predict endpoint")
+    try:
+        response = requests.post(f"{FASTAPI_URL}/predict", json=payload)
+        print("Response:")
+        print(response.json())
+    except Exception as e:
+        print(f"Error: {e}")
 
 
 def trigger_train():
-    command = ["curl", "-X", "POST", f"{FASTAPI_URL}/train"]
-    run_curl(command)
+    import requests
+
+    print("Step 3: Trigger training endpoint")
+    try:
+        response = requests.post(f"{FASTAPI_URL}/train")
+        print("Response:")
+        print(response.json())
+    except Exception as e:
+        print(f"Error: {e}")
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Test FastAPI endpoints")
+    parser.add_argument(
+        "--minikube",
+        action="store_true",
+        help="Use Minikube endpoint instead of localhost",
+    )
+    args = parser.parse_args()
+
+    if args.minikube:
+        # Get minikube IP dynamically
+        result = subprocess.run(["minikube", "ip"], capture_output=True, text=True)
+        minikube_ip = result.stdout.strip()
+        FASTAPI_URL = f"http://{minikube_ip}:30080"
+        print(f"Using Minikube endpoint: {FASTAPI_URL}")
+    else:
+        print(f"Using Docker Compose endpoint: {FASTAPI_URL}")
+
     print("Step 1: Check health endpoint")
     check_health()
 
-    print("Step 2: Test predict endpoint")
     test_predict()
 
     user_input = (
